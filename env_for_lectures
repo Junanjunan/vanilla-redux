@@ -1,0 +1,17 @@
+# 0.3 Requirements
+    preparation: google chrome(browser), github(version control), node.js, visual studio code(text editor), npm(or yarn)
+    react 무료강의, react hooks 10 듣고 오라 함
+
+
+# 04 Project Setup
+    redux 설치: npx create-react-app vanilla-redux
+        - src 폴더 내에서  index.js만 남기고 전부 삭제(App,js, App.css, index.css, logo.svg, serviceWorker.js, setupTests.js 등)
+
+    (index.js)
+        전부 지우고 시작
+
+    git init
+    git remode add origin https://github.com/Junanjunan/vanilla-redux
+    git add .
+    git commit -m "sad"
+    git push origin master
