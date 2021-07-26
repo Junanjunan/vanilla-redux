@@ -4,14 +4,139 @@
 
 
 # 04 Project Setup
-    redux 설치: npx create-react-app vanilla-redux
+    react 설치: npx create-react-app vanilla-redux
         - src 폴더 내에서  index.js만 남기고 전부 삭제(App,js, App.css, index.css, logo.svg, serviceWorker.js, setupTests.js 등)
 
     (index.js)
         전부 지우고 시작
 
     git init
-    git remode add origin https://github.com/Junanjunan/vanilla-redux
+    git remote add origin https://github.com/Junanjunan/vanilla-redux
     git add .
     git commit -m "sad"
     git push origin master
+
+
+# 1.0 Vanilla Counter
+    (public/index.html)
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="theme-color" content="#000000" />
+            <meta
+            name="description"
+            content="Web site created using create-react-app"
+            />
+            <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+            <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+            <title>React App</title>
+        </head>
+        <body>
+
+        </body>
+        </html>
+        - 주석 지우고 시작
+
+    npm start로 프로젝트 시작
+
+    (public/index.html)
+        <body>
+            <button id="add">Add</button>
+            <span>0</span>
+            <button id="minus">Minus</button>
+        </body>
+
+    (src/index.js)
+        const add = document.getElementById("add");
+        const minus = document.getElementById("minus");
+        const number = document.querySelector("span");
+
+
+        let count = 0;
+
+        number.innerText = count;
+
+        const updateText = () => {
+            number.innerText = count;
+        }
+
+        const handleAdd = () => {
+            count = count + 1;
+            updateText();
+        };
+
+        const handleMinus = () => {
+            count = count -1;
+            updateText();
+        };
+
+        add.addEventListener("click", handleAdd);
+        minus.addEventListener("click", handleMinus);
+        위와 같은 vanilla JS를 Redux로 교체하자
+
+
+# 1.1 Store and Reducer
+    
+    Redux 설치: npm install redux
+
+    (src/index.js)
+        import { createStore } from "redux";
+
+        const countModifier = () => {            // reducer를 countModifier로 명명 , state 초기값을 주지 않으면 0을 초기값으로 갖는다고 함
+            return 1
+        }
+
+        const countStore = createStore(countModifier);  // createStore는 reducer를 받아야 한다.() 안에가 reducer, 따라서 reducer를 위에 먼저 정의
+
+
+# 1.2 Actions
+
+    dispatch(action) -> reducer -> state에서 reture -> (getState 등이 subscribe되어 있다면 자등으로) render
+
+    state를 위해서는 dispatch를 통해야 하고, dispatch는 반드시 action이 필요, action은 object이어야 하고, type을 반드시 가져야 한다.
+
+
+# 1.4 Recap Refactor
+
+    (index.js)
+        import { createStore } from "redux";
+
+        const add = document.getElementById("add");
+        const minus = document.getElementById("minus");
+        const number = document.querySelector("span");
+
+        const ADD = "ADD";
+        const MINUS = "MINUS";
+
+        const countModifier = (count=0, action) => {    // reducer를 countModifier로 명명 , state 초기값을 주지 않으면 0을 초기값으로 갖는다고 함
+            switch (action.type){
+                case ADD:                               
+                    return count +1;
+                case MINUS:
+                    return count -1;
+                default:
+                    return count;
+            }
+        };
+
+        const countStore = createStore(countModifier);  // createStore는 reducer를 받아야 한다.() 안에가 reducer, 따라서 reducer를 위에 먼저 정의
+
+        const onChange = () => {
+            number.innerText = countStore.getState();
+        }
+
+        countStore.subscribe(onChange);
+
+        const handleAdd = () => {
+            countStore.dispatch({ type: "ADD" });
+        }
+
+        const handleMinus = () => {
+            countStore.dispatch({ type: "MINUS" });  // Actions must be plain objects. -> objects: {type: "a"}
+        }
+
+        add.addEventListener("click", handleAdd);   // add.addEventListener("click", () => countStore.dispatch({type:"ADD"})) 
+        minus.addEventListener("click", handleMinus);
