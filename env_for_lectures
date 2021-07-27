@@ -4,7 +4,7 @@
 
 
 # 04 Project Setup
-    react 설치: npx create-react-app vanilla-redux
+    react 설치: $ npx create-react-app vanilla-redux
         - src 폴더 내에서  index.js만 남기고 전부 삭제(App,js, App.css, index.css, logo.svg, serviceWorker.js, setupTests.js 등)
 
     (index.js)
@@ -142,4 +142,141 @@
         minus.addEventListener("click", handleMinus);
 
 # 2.0 Vanilla ToDo
+
+    Vanila JavaScript ToDo
     
+    (public/index.html)
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="theme-color" content="#000000" />
+            <meta
+            name="description"
+            content="Web site created using create-react-app"
+            />
+            <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+            <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+            <title>Vanilla Redux</title>
+        </head>
+        <body>
+            <h1>To Doss</h1>
+            <form>
+            <input type="text" placeholder="Write to do" />
+            <button>Add</button>
+            </form>
+            <ul></ul>
+            <script src="../src/index.js"></script>
+        </body>
+        </html>
+
+    (src/index.js)
+        const form = document.querySelector("form");
+        const input = document.querySelector("input");
+        const ul = document.querySelector("ul");
+
+        const createToDo = toDo => {
+            const li = document.createElement("li");
+            li.innerText = toDo;
+            ul.appendChild(li);
+        };
+
+        const onSubmit = e => {
+            e.preventDefault();
+            const toDo = input.value;
+            input.value = "";
+            createToDo(toDo);
+        };
+
+        form.addEventListener("submit", onSubmit);
+
+
+    Redux를 이용해서 ToDO를 다시 작성해보자
+
+    (src/index.js)
+        import { createStore } from "redux";
+        const form = document.querySelector("form");
+        const input = document.querySelector("input");
+        const ul = document.querySelector("ul");
+
+        const ADD_TODO = "ADD_TODO";
+        const DELETE_TODO = "DELETE_TODO";
+
+        const reducer = (state = [], action) => {
+            console.log(action);
+            switch (action.type) {
+                case ADD_TODO:
+                    return [];
+                case DELETE_TODO:
+                    return [];
+                default:
+                    return state;
+            }
+        };
+
+        const store = createStore(reducer);
+
+        const onSubmit = e => {
+            e.preventDefault();
+            const toDo = input.value;
+            input.value = "";
+            store.dispatch({type:ADD_TODO, text:toDo});
+        };
+
+        form.addEventListener("submit", onSubmit);
+
+    똑같이 해줬는데 나는 console.log(action)이 안나오고 오류가 나옴..
+    Uncaught SyntaxError: Cannot use import statement outside a module
+        -> import {createStore} from "redux";가 안되어서 인듯
+        * package.json에 "type":"module" 추가하고, (public/index.html)에서 <script type="module" src="../src/index.js"></script> 해주면 된다고 함
+            -> 오류 변경 Access to script at 'file:///C:/Users/User/Desktop/github/redux/vanilla-redux/src/index.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: http, data, chrome, chrome-extension, chrome-untrusted, https.
+                -> https://velog.io/@takeknowledge/%EB%A1%9C%EC%BB%AC%EC%97%90%EC%84%9C-CORS-policy-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC%EA%B0%80-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0-3gk4gyhreu
+                뭐 어떻게 하라는데, 해도 안됨
+
+    * 절대 Mutate State 쓰지 말라고 함. 왜인지는 설명 안했음
+
+
+# 2.1 State Mutation
+
+    Three Principles of Redux
+
+    https://redux.js.org/understanding/thinking-in-redux/three-principles
+
+    1. Single source of truth
+    2. State is read-only
+    3. Changes are made with pure functions
+        Don't mutate state -> state를 그대로 조작하는게 아니라, 새로운 state를 return 한다.
+
+    (src/index.js)
+        import { createStore } from "redux";
+        const form = document.querySelector("form");
+        const input = document.querySelector("input");
+        const ul = document.querySelector("ul");
+
+        const ADD_TODO = "ADD_TODO";
+        const DELETE_TODO = "DELETE_TODO";
+
+        const reducer = (state = [], action) => {
+            console.log(action);
+            switch (action.type) {
+                case ADD_TODO:
+                    return [...state, { text: action.text, id: Date.now() }];
+                case DELETE_TODO:
+                    return [];
+                default:
+                    return state;
+            }
+        };
+
+        const store = createStore(reducer);
+
+        const onSubmit = e => {
+            e.preventDefault();
+            const toDo = input.value;
+            input.value = "";
+            store.dispatch({type:ADD_TODO, text:toDo});
+        };
+
+        form.addEventListener("submit", onSubmit);

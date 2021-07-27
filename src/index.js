@@ -1,38 +1,47 @@
 import { createStore } from "redux";
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
-const ADD = "ADD";
-const MINUS = "MINUS";
-
-const countModifier = (count=0, action) => {    // reducer를 countModifier로 명명 , state 초기값을 주지 않으면 0을 초기값으로 갖는다고 함
-    switch (action.type){
-        case ADD:                               
-            return count +1;
-        case MINUS:
-            return count -1;
+const reducer = (state = [], action) => {
+    switch (action.type) {
+        case ADD_TODO:
+            return [...state, { text: action.text, id: Date.now() }];
+        case DELETE_TODO:
+            return [];
         default:
-            return count;
+            return state;
     }
 };
 
-const countStore = createStore(countModifier);  // createStore는 reducer를 받아야 한다.() 안에가 reducer, 따라서 reducer를 위에 먼저 정의
+const store = createStore(reducer);
 
-const onChange = () => {
-    number.innerText = countStore.getState();
+store.subscribe(() => console.log(store.getState()));
+
+const paintToDos = () => {
+    const toDos = store.getState();
+    toDos.forEach(toDo => {
+        const li = document.createElement("li");
+        li.id = toDo.id;
+        li.innerText = toDo.text;
+        ul.appendChild(li);
+    });
+};
+
+store.subscribe(paintToDos)
+
+const addToDo = text => {
+    store.dispatch({type:ADD_TODO, text});     // {text:text} -> {text} 로 표현한 것과 동일
 }
 
-countStore.subscribe(onChange);
+const onSubmit = e => {
+    e.preventDefault();
+    const toDo = input.value;
+    input.value = "";
+    addToDo(toDo);
+};
 
-const handleAdd = () => {
-    countStore.dispatch({ type: "ADD" });
-}
-
-const handleMinus = () => {
-    countStore.dispatch({ type: "MINUS" });  // Actions must be plain objects. -> objects: {type: "a"}
-}
-
-add.addEventListener("click", handleAdd);   // add.addEventListener("click", () => countStore.dispatch({type:"ADD"})) 
-minus.addEventListener("click", handleMinus);
+form.addEventListener("submit", onSubmit);
