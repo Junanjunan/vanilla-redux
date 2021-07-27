@@ -235,6 +235,13 @@
                 -> https://velog.io/@takeknowledge/%EB%A1%9C%EC%BB%AC%EC%97%90%EC%84%9C-CORS-policy-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC%EA%B0%80-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0-3gk4gyhreu
                 뭐 어떻게 하라는데, 해도 안됨
 
+    --> 해결
+        redux를 쓰려면, npm start를 통해 열린 서버를 통해 실행해야 위 오류가 발생하지 않는다.
+        CORS policy 라는게 사용되어지는 데이터?의 출처가 서로 다를때 막는데, 오류가 생긴 이유를 생각해보니, redux는 node 서버에서 돌아가는데(따라서 npm start를 해줘야 실행됨), index.html을 나는 서버 구동없이 그냥 열었기 때문에 CORS 문제가 생긴듯,
+        또한, node 서버를 통하니, index.html에서 script를 통해 index.js를 호출하지 않아도 저절로 호출되었음. 오히려 script를 통해 호출했더니 Uncaught SyntaxError: Unexpected token '<' 라는 오류가 발생
+        
+    --> 어쨌든, redux를 실행할때는 npm start를 통해 node 서버에서 구동해야 함을 알았다. (CORS policy...)
+
     * 절대 Mutate State 쓰지 말라고 함. 왜인지는 설명 안했음
 
 
