@@ -140,3 +140,6 @@
 
         add.addEventListener("click", handleAdd);   // add.addEventListener("click", () => countStore.dispatch({type:"ADD"})) 
         minus.addEventListener("click", handleMinus);
+
+# 2.0 Vanilla ToDo
+    
