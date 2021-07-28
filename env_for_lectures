@@ -683,7 +683,7 @@
 
     connect()
         - component 들을 store에 연결시켜준다.
-        - 2개의 argument를 가진다. state, dispatch -> 2개 중 고를 수 있다.
+        - 2개의 argument를 가진다. mapStateToProps, mapDispatchToProps -> 2개 중 고를 수 있다.
     mapStateToProps()
         - store의 state를 Home.js에 연결시켜줄 수 있도록 이용해보자. (Home.js의 getCurrentState())
         - 2개의 argument, state, ownProps? : state - redux의 state, ownProps? - component의 props
@@ -781,3 +781,191 @@
 
 
 # 3.3 mapDispatchToProps
+    connect()는 mapStateToProps와 mapDispatchToProps 2개의 인자를 받는다: connect(mapStateToProps, mapDispatchToProps)
+    mapStateToProps만 써도 된다.: connect(mapStateToProps)
+    mapDispatchToProps만 쓸때는 이렇게: connect(null, mapDispatchToProps)
+    mapDispatchToProps는 2개의 인자를 받는다.: dispatch, ownProps?
+
+    (src/routes/Home.js)
+        ...
+        function mapDispatchToProps(dispatch){
+            return {dispatch}                   // {} 안에 왜 넣는 걸까..
+        }
+
+        export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+    위와 같이 mapDispatchToProps와 Home을 연결해주고,
+    dispatch를 Home({ dispatch })로 해서 사용하자
+
+    (src/routes/Home.js)
+        import { addToDo } from "./store";
+
+        function Home({ toDos, dispatch }) {
+            ...
+            function onSubmit(e){
+                ...
+                dispatch(addToDo({text}))       // store.js에서 addToDo는, {type: Add, text}를 반환하는 action에 들어갈 인자?이다. 자체가 action은 아니고, action으로 넣기위해 만든 인자.
+            }
+        }
+
+    전체기록
+    (src/routes/Home.js)
+        import React, { useState } from "react";
+        import { connect } from "react-redux";
+        import { addToDo } from "./store";
+
+        function Home({ toDos, dispatch }) {
+            const [text, setText] = useState("");
+            function onChange(e) {
+                setText(e.target.value);
+            };
+            function onSubmit(e) {
+                e.preventDefault();
+                setText("");
+                dispatch(addToDo({text}))
+            }
+            return (
+                <>
+                    <h1>To do</h1>
+                    <form onSubmit={onSubmit}>
+                        <input type="text" value={text} onChange={onChange} />
+                        <button>Add</button>
+                    </form>
+                    <ul>{JSON.stringify(toDos)}</ul>
+                </>
+            );
+        }
+
+        function mapStateToProps(state) { 
+            return { toDos: state }
+        }
+
+        function mapDispatchToProps(dispatch, ownProps){
+            return {dispatch}
+        }
+
+        export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+
+    mapStateToProps, mapDispatchToProps를 통해 props를 변경해서 넘겨줄 수 있음을 알수 있었다.
+    새로운 addToDo라는 prop을 만들자. 위와 같이 dispatch를 Home에 넣고 하지 말고 prop으로 만들자
+
+    우선, action에 들어갈 것들을 묶어서 actionCreators로 만들어주자
+    (src/routes/store.js)
+        import { createStore } from "redux";
+
+        const ADD = "ADD";
+        const DELETE = "DELETE";
+
+        const addToDo = text => {
+            return {
+                type: ADD,
+                text
+            };
+        };
+
+        const deleteToDo = id => {
+            return {
+                type: DELETE,
+                id
+            };
+        };
+
+        const reducer = (state = ["Hello"], action) => {
+            switch (action.type) {
+                case ADD:
+                    return [{ text: action.text, id: Date.now() }, ...state];
+                case DELETE:
+                    return state.filter(toDo => toDo.id !== action.id);
+                default:
+                    return state;
+            }
+        }
+
+        const store = createStore(reducer);
+
+        export const actionCreators = {         // 이렇게
+            addToDo,
+            deleteToDo
+        }
+
+        export default store;
+
+    (src/routes/Home.js)
+        ...
+        function mapDispatchToProps(dispatch, ownProps){
+            // console.log(dispatch);   // dispatch(action){~~~} 출력. action을 받는, 내가 알고 있는 그 dispatch이다.
+            return {
+                addToDo: (text) => dispatch(actionCreators.addToDo(text)) // addToDo: text를 받는 actionCreators.addToDo() 를 action으로 받는 dispatch 
+            };
+        }
+
+        export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+    위와 같이 해주고, function Home에서 남아있는 props를 보기 위해 다음과 같이 해주자
+    
+    (src/routes/Home.js)
+        function Home({ toDos, ...rest}){
+            console.log(rest);
+        }
+    
+    그러면 console에서 남아있는 props에(rest에) 
+    addToDo: text => dispatch(_store_WEBPACK_IMPORTED_MODULLE_@__["actionCreators"].addToDo(texT))
+    가 담긴 것을 확인 가능
+    지금 우리는 Home에서 dispatch를 하지 않고
+    dispatch를 prop안에 담아서 Home에 전달하고 있다.
+
+    (src/routes/Home.js)
+        import React, { useState } from "react";
+        import { connect } from "react-redux";
+        import { actionCreators, addToDo } from "./store";
+
+        function Home({ toDos, addToDo }) {
+            const [text, setText] = useState(""); // react hooks useState()
+            function onChange(e) {
+                setText(e.target.value);
+            };
+            function onSubmit(e) {
+                e.preventDefault();
+                addToDo(text);
+                setText("");
+            }
+            return (
+                <>
+                    <h1>To do</h1>
+                    <form onSubmit={onSubmit}>
+                        <input type="text" value={text} onChange={onChange} />
+                        <button>Add</button>
+                    </form>
+                    <ul>{JSON.stringify(toDos)}</ul>
+                </>      // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
+            );
+        }
+
+        function mapStateToProps(state) { // ownProps는 필요 없어서 삭제
+            return { toDos: state }
+        }
+
+        function mapDispatchToProps(dispatch, ownProps){
+            // console.log(dispatch);   // dispatch(action){~~~} 출력. action을 받는, 내가 알고 있는 그 dispatch이다.
+            return {
+                addToDo: (text) => dispatch(actionCreators.addToDo(text)) // addToDo: text를 받는 actionCreators.addToDo() 를 action으로 받는 dispatch 
+            };
+        }
+
+        export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+    위와 같이 하고 텍스트를 add 해주면, [{"text":"2","id":1627493048693},{"text":"1","id":1627493047333},"Hello"] 식으로 store.js의 reducer가 case ADD 일때 return 하는 값의 형태가 추가되는 상태임을 확인 가능
+    mapDispatchToProps에서 addToDo: (texT) => dispatch(actionCreators.addToDo(text)) 로 props를 전달
+    function Home에서 전달받은 prop중 addToDo를 function onSubmit에 넣기
+    addToDo(texT)의 값이 text를 받는 action을 이용해서 dispatch
+    dispatch를 하면 reducer가 return 해주는 값을 받게 된다.
+    따라서 addToDo(text)를 통해서 받아지는 값은, store.js에 정의해준 addToDo를 action으로 받은 reducer의 return값.       
+
+    이렇게 prop을 전달하는 식으로 하기 때문에
+    Home component는 직접 dispatch나 actionCreators를 처리할 필요가 없다. (코드의 간결화를 위해서 이렇게 하는 것인가? 예측가능한 코딩을 위해?)
+
+    다음 강의: toDos를 render해보자
+
+
+# Deleting To Do
