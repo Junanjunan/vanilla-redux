@@ -616,11 +616,11 @@
                         <button>Add</button>
                     </form>
                     <ul></ul>
-                </>      
+                </>     // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
             );
         }
 
-        export default Home;
+        export default Home;    
 
         <input type="text /> 까지 하면 input에 입력되는데. 우리는 Hooks를 이용해서 값을 받아올것인데, 이때는 onChange를 이용해야함, value={text}를 줬기 때문에 text 값을 받아오려면 onChange를 이용
 
@@ -675,3 +675,109 @@
             </Provider>,    // (src/routes/store.js)의 store와 연결시켜주기 위해 react-redux의 Provider 사용
             document.getElementById("root")
         );
+
+
+# 3.2 mapStateToProps
+
+    react-redux의 문서 참고
+
+    connect()
+        - component 들을 store에 연결시켜준다.
+        - 2개의 argument를 가진다. state, dispatch -> 2개 중 고를 수 있다.
+    mapStateToProps()
+        - store의 state를 Home.js에 연결시켜줄 수 있도록 이용해보자. (Home.js의 getCurrentState())
+        - 2개의 argument, state, ownProps? : state - redux의 state, ownProps? - component의 props
+        - Redux store로부터 무언가를 가져오기 위해서 사용, 가져와서 component의 props에 넣는다.
+
+    connect()가 Home으로 보내는 props에 추가될 수 있도록 허용해준다.
+
+    (src/routes/Home.js)
+        ...
+        function getCurrentState(state, ownProps) {
+            console.log(state, ownProps);
+        }
+
+        export default connect(getCurrentState)(Home);
+    
+    이렇게 해주고 console을 보면
+    mapStateToProps() in Connect(Home) must return a plain object. Instead received undefined.
+    라는 오류가 뜨긴 하는데, 중요한 것은 Redux store로부터 state를 받아 오고 있다는 것이다.
+    빈 array가 나오는데, 확인을 위해 "Hello"를 default state로 주고 다시 출력해보자.
+
+        어떻게 store를 받아오는가 보니... 아래는 내 생각 정리. 전혀 안맞을 수도 있다.
+            store.js 파일(이름은 상관 무)
+            index.js에서 <Provider store={store}><App /></Provider> -> Provider를 통해 store와 연결 (store에 대한 정보는 App 안의 component에 담겨있음)
+            App.js는 Router, Route를 통해 props를 Home에게 주는데,
+            Home.js에서는 mapStateToProps를 통해 props에 store.js의 store의 state를 담아서, connect()를 통해 Home.js에 있는 function Home에 전달...??
+
+            store.js의 store의 state값을 전달하는데
+            Provider - Router - Route - Home 이런 식으로 props를 전달하는데, Route-Home에서 mapStateToProp를 통해 store의 state 값을 props에 포함시킨다.
+
+
+    그리고 {history:{...}, location:{...}, ... } 라고 compoent의 Props가 출력
+    이는 react router에 의해서 Home에게 준 Props 이다
+
+    이제 오류를 해결하기 위해 (무언가를) return 해보자.
+
+    (src/routes/Home.js)
+        function Home(props){
+            console.log(props);
+            ...
+        }
+
+        ...
+
+        function getCurrentState(state, ownProps){
+            return {sexy: true}
+        }
+
+        export default connect(getCurrentState)(Home);
+
+        위와 같이 해주고 console을 보면 sexy:true가 props에 담긴게 출력된다.
+            -> react router에 의해 Home에게 Props를 준것을 확인 가능
+            -> connect()가 Home(즉, component)으로 보내는 props에 추가도힐 수 있도록 허용해 준다.
+            -> 이제 App component에는 react-router로부터 받은 props들과 connect를 통해 받은 sexy:true가 담겨있다.
+
+        이를 이용해보자.
+        그리고 참고. 우리는 getCurrentState라고 해줬는데, 문서를 보면 mapStateToProps로 해주어야 한다고 한다.
+        의미 정리: mapStateToProps - Redux state로부터 component에 prop으로써 전달한다는 것
+        이를 통해 toDo를 render할 수 있다.
+        일단 render 하지 않고 먼저 봐보자. - JSON을 이용해서
+
+    (src/routes/Home.js)
+        import React, { useState } from "react";
+        import { connect } from "react-redux";
+
+        function Home({ toDos } {
+            const [text, setText] = useState(""); // react hooks useState()
+            function onChange(e) {
+                setText(e.target.value);
+            };
+            function onSubmit(e) {
+                e.preventDefault();
+                setText = "";
+            }
+            return (
+                <>
+                    <h1>To do</h1>
+                    <form onSubmit={onSubmit}>
+                        <input type="text" value={text} onChange={onChange} />
+                        <button>Add</button>
+                    </form>
+                    <ul>{JSON.stringify(toDos)}</ul>
+                </>      // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
+            );
+        }
+
+        function mapStateToProps(state) { // ownProps는 필요 없어서 삭제
+            return { toDos: state }
+        }
+
+        export default connect(mapStateToProps)(Home);
+
+    위와 같이 하면 default state 값인 ["Hello"] 가 화면에 나타난다.
+
+    다음 강의는 어떻게 toDo를 추가하는지 보자.
+
+
+# 3.3 mapDispatchToProps
