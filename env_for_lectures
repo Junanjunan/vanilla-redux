@@ -533,3 +533,145 @@
         };
 
         form.addEventListener("submit", onSubmit);
+
+## 3 REACT REDUX
+
+# 3.0
+
+    (src/components/App.js) 생성
+        function App() {
+            return "App"
+        }
+
+        export default App;
+
+    (src/index.js)
+        import React from "react";
+        import ReactDOM from "react-dom";
+        import App from "./components/App";
+
+        ReactDOM.render(<App></App>, document.getElementById("root"));
+
+    (public/index.html)
+    ...
+    <body>
+        <div id="root"></div>
+    </body>
+    ...
+
+    작동하는 것 확인하고 계속 진행 - App 이 html에 표시됨
+
+    필요한 것들 설치
+    
+        $ npm install react-redux
+        $ npm install react-router-dom
+        
+            Detail과 Home 2개의 페이지가 필요하기 때문이라 함
+
+    (src/routes/Home.js)
+        export default () => "Home";
+
+    (src/routes/Detail.js)
+        export default () => "Detail";
+
+    (src/components/App.js)
+        import React from "react";
+        import { HashRouter as Router, Route } from "react-router-dom";
+        import Detail from "../routes/Detail";
+        import Home from "../routes/Home";
+
+        function App() {
+            return (
+                <Router>
+                    <Route path="/" exact component={Home}></Route>
+                    <Route path="/:id" component={Detail}></Route>
+                </Router>
+            );
+        }
+
+        export default App;
+
+    -> http://localhost:3000/# : Home 이 나오고
+       http://localhost:3000/#/1, 12312 등 : Detail이 나온다.
+
+    여기까지 기본 셋팅
+
+    (src/routes/Home.js)
+        import React, { useState } from "react";
+
+        function Home() {
+            const [text, setText] = useState(""); // react hooks useState()
+            function onChange(e) {
+                setText(e.target.value);
+            };
+            function onSubmit(e) {
+                e.preventDefault();
+                setText = "";
+            }
+            return (
+                <>
+                    <h1>To do</h1>
+                    <form onSubmit={onSubmit}>
+                        <input type="text" value={text} onChange={onChange} />
+                        <button>Add</button>
+                    </form>
+                    <ul></ul>
+                </>      
+            );
+        }
+
+        export default Home;
+
+        <input type="text /> 까지 하면 input에 입력되는데. 우리는 Hooks를 이용해서 값을 받아올것인데, 이때는 onChange를 이용해야함, value={text}를 줬기 때문에 text 값을 받아오려면 onChange를 이용
+
+
+# 3.1 Connecting the Store
+
+    (src/routes/store.js)
+        import { createStore } from "redux";
+
+        const ADD = "ADD";
+        const DELETE = "DELETE";
+
+        export const addToDo = text => {
+            return {
+                type: ADD,
+                text
+            };
+        };
+
+        export const deleteToDo = id => {
+            return {
+                type: DELETE,
+                id
+            };
+        };
+
+        const reducer = (state = [], action) => {
+            switch (action.type) {
+                case ADD:
+                    return [{ text: action.text, id: Date.now() }, ...state];
+                case DELETE:
+                    return state.filter(toDo => toDo.id !== action.id);
+                default:
+                    return state;
+            }
+        }
+
+        const store = createStore(reducer);
+
+        export default store;
+
+    (src/index.js)
+        import React from "react";
+        import ReactDOM from "react-dom";
+        import { Provider } from "react-redux";
+        import App from "./components/App";
+        import store from "./routes/store";
+
+        ReactDOM.render(
+            <Provider store={store}>      
+                <App />
+            </Provider>,    // (src/routes/store.js)의 store와 연결시켜주기 위해 react-redux의 Provider 사용
+            document.getElementById("root")
+        );
