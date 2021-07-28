@@ -9,7 +9,7 @@ const DELETE_TODO = "DELETE_TODO";
 const reducer = (state = [], action) => {
     switch (action.type) {
         case ADD_TODO:
-            return [...state, { text: action.text, id: Date.now() }];
+            return [...state, { text: action.text, id: Date.now() }];   // ...state: ES6 spread
         case DELETE_TODO:
             return [];
         default:
