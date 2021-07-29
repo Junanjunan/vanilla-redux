@@ -968,4 +968,113 @@
     다음 강의: toDos를 render해보자
 
 
-# Deleting To Do
+# 3.4 Deleting To Do
+
+    (src/components/ToDo.js)
+
+        import React from "react";
+
+        function ToDo({ text }){
+            return (
+                <li>
+                    {text} <button>DEL</button>
+                </li>
+            )
+        }
+
+        export default ToDo;
+
+    (src/routes/Home.js)
+        import React, { useState } from "react";
+        import { connect } from "react-redux";
+        import ToDo from "../components/ToDo";
+        import { actionCreators, addToDo } from "./store";
+
+        function Home({ toDos, addToDo }) {        // toDos는 prop이다
+            const [text, setText] = useState(""); // react hooks useState()
+            function onChange(e) {
+                setText(e.target.value);
+            };
+            function onSubmit(e) {
+                e.preventDefault();
+                addToDo(text);
+                setText("");
+            }
+            return (
+                <>
+                    <h1>To do</h1>
+                    <form onSubmit={onSubmit}>
+                        <input type="text" value={text} onChange={onChange} />
+                        <button>Add</button>
+                    </form>
+                    <ul>{toDos.map(toDo => <ToDo {...toDo} />)}</ul>    // toDos는 prop이다
+                </>      // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
+            );
+        }
+
+        function mapStateToProps(state) { // ownProps는 필요 없어서 삭제
+            return { toDos: state }
+        }
+
+        function mapDispatchToProps(dispatch, ownProps){
+            // console.log(dispatch);   // dispatch(action){~~~} 출력. action을 받는, 내가 알고 있는 그 dispatch이다.
+            return {
+                addToDo: (text) => dispatch(actionCreators.addToDo(text)) // addToDo: text를 받는 actionCreators.addToDo() 를 action으로 받는 dispatch 
+            };
+        }
+
+        export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+    이렇게 해주고 ADD를 해주면, To do에 Add가 되는데   Warning: Each child in a list should have a unique "key" prop. 오류 발생
+    key={toDo.id}를 추가하자
+
+    (src/routes/Home.js)
+        ...
+        <ul>{toDos.map(toDo => <ToDo {...toDo} key={toDo.id} />)}</ul>
+        ...
+
+    (src/components/ToDo.js)
+        import React from "react";
+        import { connect } from "react-redux";
+
+        function ToDo({ text }){
+            return (
+                <li>
+                    {text} <button>DEL</button>
+                </li>
+            )
+        }
+
+        function mapDispatchToProps(dispatch, ownProps){
+            console.log(ownProps);
+        }
+
+        export default connect(null, mapDispatchToProps)(ToDo);
+
+    위와 같이 해주고 Add를 추가해주면, ownProps가 console에 출력 {text:~, id:~}
+
+    (src/components/ToDo.js)
+        import React from "react";
+        import { connect } from "react-redux";
+        import { actionCreators } from "../routes/store";
+
+        function ToDo({ text, onBtnClick }){
+            return (
+                <li>
+                    {text} <button onClick={onBtnClick}>DEL</button>
+                </li>
+            )
+        }
+
+        function mapDispatchToProps(dispatch, ownProps){
+            return{
+                onBtnClick: () => dispatch(actionCreators.deleteToDo(ownProps.id))     //deleteToDo는 id가 필요한데, console.log(ownProps)를 해보면 id를 이미 갖고 있다. 그러니 필요한 id를 ownProps로부터 받아오자.
+            }
+        }
+
+        export default connect(null, mapDispatchToProps)(ToDo);
+
+    이제 Del 가능
+
+
+# 3.5 Detail Screen

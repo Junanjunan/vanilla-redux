@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import ToDo from "../components/ToDo";
 import { actionCreators, addToDo } from "./store";
 
-function Home({ toDos, addToDo }) {
+function Home({ toDos, addToDo }) {        // toDos는 prop이다
     const [text, setText] = useState(""); // react hooks useState()
     function onChange(e) {
         setText(e.target.value);
@@ -19,7 +20,7 @@ function Home({ toDos, addToDo }) {
                 <input type="text" value={text} onChange={onChange} />
                 <button>Add</button>
             </form>
-            <ul>{JSON.stringify(toDos)}</ul>
+            <ul>{toDos.map(toDo => <ToDo {...toDo} key={toDo.id} />)}</ul> 
         </>      // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
     );
 }
