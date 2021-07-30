@@ -10,6 +10,7 @@ function Home({ toDos, addToDo }) {        // toDos는 prop이다
         setText(e.target.value);
     };
     function onSubmit(e) {
+        console.log(toDos);
         e.preventDefault();
         addToDo(text);
         setText("");
@@ -21,7 +22,7 @@ function Home({ toDos, addToDo }) {        // toDos는 prop이다
                 <input type="text" value={text} onChange={onChange} />
                 <button>Add</button>
             </form>
-            <ul>{toDos.map(toDo => <ToDo {...toDo} key={toDo.id} />)}</ul> 
+            <ul>{toDos.map(toDo => <ToDo {...toDo} key={toDo.id} />)}</ul>
         </>      // <></> is called a Fragment, It's a ReactJS feature. <></> = <Fragment></Fragment> / react는 하나의 태그만 return 되는데 react.fragment는 두개 리턴 시켜준다. 라고 함
     );
 }
