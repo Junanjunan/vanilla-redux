@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import ToDo from "../components/ToDo";
-import { actionCreators, addToDo } from "./store";
+import { add } from "./store";
+
 
 function Home({ toDos, addToDo }) {        // toDos는 prop이다
     const [text, setText] = useState(""); // react hooks useState()
@@ -32,7 +33,7 @@ function mapStateToProps(state) { // ownProps는 필요 없어서 삭제
 function mapDispatchToProps(dispatch, ownProps){
     // console.log(dispatch);   // dispatch(action){~~~} 출력. action을 받는, 내가 알고 있는 그 dispatch이다.
     return {
-        addToDo: (text) => dispatch(actionCreators.addToDo(text)) // addToDo: text를 받는 actionCreators.addToDo() 를 action으로 받는 dispatch 
+        addToDo: (text) => dispatch(add(text)) // addToDo: text를 받는 actionCreators.addToDo() 를 action으로 받는 dispatch 
     };
 }
 
