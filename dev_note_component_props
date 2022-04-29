@@ -1,0 +1,107 @@
+https://www.youtube.com/watch?v=HZlH8olDeAQ
+
+HTML
+    <div id="root"></div>
+
+
+JS(Babel)
+    function Show(props){
+        return(
+            <h3>
+                Name is {props.name}
+            </h3>
+        );
+    }
+
+    const element = <Show name="김준환" />;    // Show라는 component를 불러올때, name의 props에 김준환 이라는 값을 설정하고, 이를 element라 정의하자.
+
+    ReactDOM.render(element, document.getElementById('root'));  // element를 rendering -> id 가 root인 곳에 넣어서 rendering
+
+
+    // props에 default값 설정 해주기: props의 값이 전달되지 않을 경우, default 값으로 쓸 값을 설정해줄수 있다.
+    // Component.defaultProps = {}
+    Show.defaultProps = {
+        name: '홍길동'
+    }
+
+    ReactDOM.render(<Show />, document.getElementById('root'));
+
+
+* props 같은 경우 부모 컴포넌트에서 자식 컴포넌트로 데이터를 전달할 때 많이 사용
+    -> React의 component를 계층적으로 구성해보면서 예제를 확인해보자
+
+        function Show(props){
+            return(
+                <h3>
+                    Name is {props.name}
+                </h3>
+            );
+        }
+
+        function App(){
+            return(
+                <main>
+                    <Show name="a" />
+                    <Show name="b" />
+                    <Show name="c" />
+                </main>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+        -> App()에서 그 자식으로 Show라는 Component를 3번 사용
+            // JSX 문법에서는 여러가지 요소가 들어갈때는 그 전체 요소를 감싸주어야 한다. 그래서 Show 컴포넌트 3개를 <main></main>으로 감싸준것, main말고 다른 것도 무방 div 등
+
+
+-- React를 이용하여 게시판 화면을 구성해보자 --
+
+HTML
+    <div id="root"></div>
+
+
+JS(Babel)
+    function User(props){
+        return (
+            <div>
+                <img src = {props.user.imageUrl} />
+                &nbsp;
+                <strong>{props.user.name}</strong>
+            </div>
+        );
+    }
+
+    // function User : props를 전달받아서 프로필과 이름을 띄워보자
+
+    function Board(props){
+        return(
+            <section>
+                <User user={props.userZ} />
+                {props.titleZ}
+                <hr/>
+                {props.contentZ}
+            </section>
+        );
+    }
+
+    const board = {
+        title: '게시글 제목입니다.',
+        content: '반갑습니다.',
+        user: {
+            name: '김준환',
+            imageUrl: 'https://placeimg.com/24/24/any'
+        }
+    }
+
+    ReactDOM.render(
+        <Board
+            titleZ = {board.title}
+            contentZ = {board.content}
+            userZ = {board.user}
+        />, document.getElementById('root')
+    )
+
+
+이와 같이
+Component의 Props 를 이용해서
+다양한 data를 속성 형태로 전달할 수 있음을 확인했다.
