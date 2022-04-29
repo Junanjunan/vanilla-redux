@@ -662,6 +662,11 @@
 
         export default store;
 
+        // 변화가 생겼을때, subscribe 이용, 
+        // 근데 전체 rendering 말고 변화한 부분만 rendering을 원함. 
+        // react가 이게 가능. 그래서 react-redux 필요
+        
+
     (src/index.js)
         import React from "react";
         import ReactDOM from "react-dom";
@@ -676,6 +681,7 @@
             document.getElementById("root")
         );
 
+**** prop, props 가 뭔지, 뭘 의미하는지, 어떻게 쓰는지 등등..... 일단 이 개념을 이해해야 다음 강의 듣는게 의미가 있을듯
 
 # 3.2 mapStateToProps
 
@@ -683,8 +689,8 @@
 
     connect()
         - component 들을 store에 연결시켜준다.
-        - 2개의 argument를 가진다. mapStateToProps, mapDispatchToProps -> 2개 중 고를 수 있다.
-    mapStateToProps()
+        - 2개의 argument를 가진다. state와 관련된 mapStateToProps, dispatch와 관련된 mapDispatchToProps -> 2개 중 고를 수 있다.
+    mapStateToProps(state, ownPromps?)
         - store의 state를 Home.js에 연결시켜줄 수 있도록 이용해보자. (Home.js의 getCurrentState())
         - 2개의 argument, state, ownProps? : state - redux의 state, ownProps? - component의 props
         - Redux store로부터 무언가를 가져오기 위해서 사용, 가져와서 component의 props에 넣는다.
@@ -693,6 +699,7 @@
 
     (src/routes/Home.js)
         ...
+
         function getCurrentState(state, ownProps) {
             console.log(state, ownProps);
         }
