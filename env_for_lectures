@@ -691,10 +691,10 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
     connect()
         - component 들을 store에 연결시켜준다.
         - 2개의 argument를 가진다. state와 관련된 mapStateToProps, dispatch와 관련된 mapDispatchToProps -> 2개 중 고를 수 있다.
-    mapStateToProps(state, ownPromps?)
+    mapStateToProps(state, ownProps?)
         - store의 state를 Home.js에 연결시켜줄 수 있도록 이용해보자. (Home.js의 getCurrentState())
-        - 2개의 argument, state, ownProps? : state - redux의 state, ownProps? - component의 props
-        - Redux store로부터 무언가를 가져오기 위해서 사용, 가져와서 component의 props에 넣는다.
+        - 2개의 argument: state, ownProps? : state - redux의 state, ownProps? - component의 props
+        - Redux store로부터 무언가(state?)를 가져와서 component의 props에 넣는다.
 
     connect()가 Home으로 보내는 props에 추가될 수 있도록 허용해준다.
 
@@ -756,7 +756,7 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
         import React, { useState } from "react";
         import { connect } from "react-redux";
 
-        function Home({ toDos } {
+        function Home({ toDos } {                   // Home(props) 에서 Home({toDos}) 로 수정. props 대신, props에 있는 것을 {} 안에 넣어서 쓸 수 있는 듯...
             const [text, setText] = useState(""); // react hooks useState()
             function onChange(e) {
                 setText(e.target.value);
@@ -792,7 +792,7 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
     connect()는 mapStateToProps와 mapDispatchToProps 2개의 인자를 받는다: connect(mapStateToProps, mapDispatchToProps)
     mapStateToProps만 써도 된다.: connect(mapStateToProps)
     mapDispatchToProps만 쓸때는 이렇게: connect(null, mapDispatchToProps)
-    mapDispatchToProps는 2개의 인자를 받는다.: dispatch, ownProps?
+    mapDispatchToProps는 2개의 인자를 받는다: matDispatchToProps(dispatch, ownProps?)
 
     (src/routes/Home.js)
         ...
@@ -1176,8 +1176,8 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
         import { createAction } from "@reduxjs/toolkit";
 
 
-        const ADD = "ADD";
-        const DELETE = "DELETE";
+        // const ADD = "ADD";
+        // const DELETE = "DELETE";
 
 
 
@@ -1201,13 +1201,13 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
 
         console.log(addToDo(), deleteToDo());       // 이렇게 함수를 호출해보면, type과 payload과 함께 나옴을 볼 수 있다.
                                                     // 또한 Add를 해도 To do 가 빈상태로 나타나는데, 이는 Home.js에서 addToDo가 text를 받는 것으로 했는데, toolkit에서는 payload로 바뀐다. 자동으로. 일종의 관행(convention)임
-                                                    // toolkit에서는 action에 보내고 싶어하는 정보가 무엇이던지 payload에 담겨서 보내진다.
+                                                   
 
         const reducer = (state = [], action) =>{
             switch (action.type){
                 case addToDo.type:
                     console.log(action);            // 위에서 설명한 것을 확인해보자. console을 보면 payload에 To do 로 Add 해준 것이 들어가있음
-                    return [{ text: action.text, id: Date.now() }, ...state];
+                    return [{ text: action.payload, id: Date.now() }, ...state];         // toolkit에서는 action에 보내고 싶어하는 정보가 무엇이던지 payload에 담겨서 보내진다.
                 case deleteToDo.type:
                     return state.filter(toDo => toDo.id !== action.payload); // toolkit의 createAction으로 deleteToDo를 만들었으므로 action은 더 이상 id를 갖지 않는다. payload로 대체해야 DEL 버튼이 작동해서 삭제가 된다.
                 default:
@@ -1271,11 +1271,11 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
         // }
 
         const reducer = createReducer([],{          // default state를 []로 설정
-            [addToDo]: (state, action) => {
-                state.push({ text: action.payload, id: Date.now() });       // redux toolkit을 할때는 state.push 즉, state를 mutate 해도 괜찮다. 그 이유는? redux toolkit이 immer라는 것 아래에서 작동되기 떄문이다. immer, redux toolkit이 알아서 해준다고 함... 
+            [addToDo]: (state, action) => {         // (state, action) => state.push({text: action.payload, id: Date.now()}); 이렇게 바로 return 하면 안되고 {} 안에 넣어서, state를 mutate 해야 한다.... 바로 return 하는 것은 새로운 state일 때만...
+                state.push({ text: action.payload, id: Date.now() });       // redux toolkit을 할때는 state.push 즉, state를 mutate 해도 괜찮다. 그 이유는? redux toolkit이 immer라는 것 아래에서 작동되기 떄문이다. immer, redux toolkit이 알아서 해준다고 함...  // push는 아무것도 return 하지 않는다는 것을 유의! state를 mutate 해준다.
             },
             [deleteToDo]: (state, action) => 
-            state.filter(toDo => toDo.id !== action.payload)            // 위와 다르게 얘는 => {} 이 아니라 => 로만 되어있는데, 이건 filter를 한 state를 바로 return한 것이라고 함
+            state.filter(toDo => toDo.id !== action.payload)            // 위와 다르게 얘는 => {} 이 아니라 => 로만 되어있는데, 이건 filter를 한 state를 바로 return한 것이라고 함 / filter는 새로운 array를 return 한다. push가 state를 mutate하는 것과는 다르다
         })
 
         // addToDo는 바로 return 하지 않고 {} 안에 작성, deleteToDo는 {} 없이 바로 return, 왜 이런 차이가 있을까?
@@ -1302,8 +1302,10 @@ https://www.youtube.com/watch?v=HZlH8olDeAQ
         const store = configureStore({ reducer });
         ...
         
+        // configureStore은 아주 쿨한 미들웨어와 함께 store를 생성
         // createStore 대신 configureStore를 쓰면, brower에서 redux dev tools를 사용 가능, 우선 구글에서 redux devtools를 다운해놓은 상태여야
         // redux dev tools를 이용해서, redux를 이용하는 사이트들의 state 등을 볼 수 있다.
+        // 이 기능 외에는 createStore 와 다른점은 없는 듯...?
 
 
 # 4.4 createSlice

@@ -41,7 +41,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 // }
 
 // const reducer = createReducer([],{          // default state를 []로 설정
-//     [addToDo]: (state, action) => {
+//     [addToDo]: (state, action) => {          // [addToDo] : action 의미
 //         state.push({ text: action.payload, id: Date.now() });       // redux toolkit을 할때는 state.push 즉, state를 mutate 해도 괜찮다. 그 이유는? redux toolkit이 immer라는 것 아래에서 작동되기 떄문이다. immer, redux toolkit이 알아서 해준다고 함... 
 //     },
 //     [deleteToDo]: (state, action) => 
