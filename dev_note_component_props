@@ -13,7 +13,7 @@ JS(Babel)
         );
     }
 
-    const element = <Show name="김준환" />;    // Show라는 component를 불러올때, name의 props에 김준환 이라는 값을 설정하고, 이를 element라 정의하자.
+    const element = <Show name="dd" />;    // Show라는 component를 불러올때, name의 props에 dd 이라는 값을 설정하고, 이를 element라 정의하자.
 
     ReactDOM.render(element, document.getElementById('root'));  // element를 rendering -> id 가 root인 곳에 넣어서 rendering
 
@@ -88,7 +88,7 @@ JS(Babel)
         title: '게시글 제목입니다.',
         content: '반갑습니다.',
         user: {
-            name: '김준환',
+            name: 'dd',
             imageUrl: 'https://placeimg.com/24/24/any'
         }
     }
