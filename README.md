@@ -1,6 +1,6 @@
 
 <img src="https://whatsgog.com/user/Junanjunan/tech-cards" alt="tq" />
-!.[tqtqwret](https://whatsgog.com/user/Junanjunan/tech-cards)
+
 -----
 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgb3ZlcmZsb3c9InZpc2libGUiIGZpbGw9IiMwOTJlMjAiPjxwYXRoIGQ9Ik0yNy43MjQgMEgzOC4ydjQ4LjQ0Yy01LjM2OCAxLjAyLTkuMyAxLjQyNy0xMy42IDEuNDI3LTEyLjc3NiAwLTE5LjQzNS01Ljc3Ni0xOS40MzUtMTYuODUzIDAtMTAuNjcgNy4wNjgtMTcuNiAxOC4wMDgtMTcuNiAxLjcgMCAzIC4xMzUgNC41NTMuNTQzem0wIDI0LjM4M2MtMS4yMjMtLjQwNy0yLjI0Mi0uNTQzLTMuNTMzLS41NDMtNS4zIDAtOC4zNiAzLjI2Mi04LjM2IDguOTcgMCA1LjU3MyAyLjkyMiA4LjYzIDguMyA4LjYzIDEuMTU1IDAgMi4xMDYtLjA2OCAzLjYtLjI3em0yNy4xMTMtOC4yMjN2MjQuMjZjMCA4LjM2LS42MTIgMTIuMzY4LTIuNDQ2IDE1LjgzMy0xLjcgMy4zMy0zLjk0MiA1LjQzNi04LjU2MiA3Ljc0N2wtOS43MTgtNC42MmM0LjYyLTIuMTc0IDYuODYzLTQuMDc2IDguMy03IDEuNDk1LTMgMS45Ny02LjQ1NiAxLjk3LTE1LjU2VjE2LjE2ek00NC4zNzIuMDU2aDEwLjQ2NXYxMC43MzdINDQuMzcyeiIvPjwvc3ZnPg==" alt="123123123" style="width:100px; height: 100px;"/>
 # Getting Started with Create React App
@@ -95,7 +95,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
  <img src="https://whatsgog.com/user/Junanjunan/tech-cards" />
 
 ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fkim-soohyeon&count_bg=%23FFDAC7&title_bg=%23FFADAD&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)
+![tqtqwret](https://whatsgog.com/user/Junanjunan/tech-cards)
 
 
-
-<img src="https://whatsgog.com/user/Junanjunan/tech-cards" />
