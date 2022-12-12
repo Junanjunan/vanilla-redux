@@ -86,3 +86,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
  <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj={handle})](https://solved.ac/{handle}" />
  
  <img src="http://mazandi.herokuapp.com/api?handle=abc&theme=warm"/>
+ 
+ ![android](https://user-images.githubusercontent.com/73055499/206967845-15970b14-768c-4572-bdb3-21329c0c6951.png)
