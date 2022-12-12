@@ -72,7 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 
 
-<img src="https://whatsgog.com/user/Junanjunan/tech-cards" alt="why?" />
+<img src="https://whatsgog.com/user/Junanjunan/tech-cards" alt="why" />
 
 <img src="https://cdn.pixabay.com/photo/2015/10/01/21/39/background-image-967820_960_720.jpg" />
 
