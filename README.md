@@ -91,3 +91,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
  ![android](https://whatsgog.com/user/j1mmyson/tech-cards)
  
  https://whatsgog.com/user/j1mmyson/tech-cards
+ 
+ 
+ <img src="https://whatsgog.com/user/Junanjunan/tech-cards">
