@@ -89,4 +89,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
  
  <img src="https://whatsgog.com/user/Junanjunan/tech-cards" />
 
-![ㅅㄷㅅㄷ](https://whatsgog.com/user/Junanjunan/tech-cards)
+![check](https://whatsgog.com/user/Junanjunan/tech-cards)
+!["check"](https://whatsgog.com/user/Junanjunan/tech-cards)
+![check]("https://whatsgog.com/user/Junanjunan/tech-cards")
+!["check"]("https://whatsgog.com/user/Junanjunan/tech-cards")
