@@ -94,5 +94,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ![check]("https://whatsgog.com/user/Junanjunan/tech-cards?sanitize=true")
 !["check"]("https://whatsgog.com/user/Junanjunan/tech-cards?sanitize=true")
 <img src="https://whatsgog.com/user/Junanjunan/tech-cards?sanitize=true"/>
-<img src="https://docs.google.com/drawings/d/1B95ajItJTAImL2WXISX0fkBLYk3nldea4Vm9eo-VyE4/edit">
-<img src="https://raw.github.com/specialorange/FDXCM/master/doc/controllers_brief.svg?sanitize=true">
+![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fkim-soohyeon&count_bg=%23FFDAC7&title_bg=%23FFADAD&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)
