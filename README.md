@@ -94,3 +94,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ![check]("https://whatsgog.com/user/Junanjunan/tech-cards")
 !["check"]("https://whatsgog.com/user/Junanjunan/tech-cards")
 <img src=https://whatsgog.com/user/Junanjunan/tech-cards/>
+<img src="https://docs.google.com/drawings/d/1B95ajItJTAImL2WXISX0fkBLYk3nldea4Vm9eo-VyE4/edit">
